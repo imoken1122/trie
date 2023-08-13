@@ -1,4 +1,14 @@
 
+// 部分文字列パターンと全ての文字のテーブルによるTrie 
+//
+// example: abc,acd
+// Table :
+//     a | -1,1,4,..,-1
+//     ab| -1,-1,3,..,-1
+//     abc| -1,-1,...-1
+//     ac | -1,-1,-1,5,..,-1
+//     acd |-1,-1,...,-1
+//
 
 const VOCAB_SIZE : usize = 128; // ascii code
 
@@ -18,6 +28,7 @@ impl TrieNode {
     }
 
 }
+
 
 #[derive(Debug,PartialEq)]
 pub struct Trie{
