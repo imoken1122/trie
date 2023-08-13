@@ -77,11 +77,23 @@ mod test{
         let mut trie = Trie::new();
         trie.insert("above".to_string());
         trie.insert("about".to_string());
-        trie.insert("absolute".to_string());
-        trie.insert("char".to_string());
+        trie.insert("abs".to_string());
+        //println!("{:?}",trie.nodes);
+        let nodes=trie.nodes;
 
-        println!("{:?}",trie.nodes);
 
-        //assert_eq!(add(-1, 1), 0);
+
+        let word_idx = [0,1,14,21,4]; //above
+        for i in 0..5{
+            assert_eq!( nodes[i].children[word_idx[i]],Some(i+1)); //a
+        }
+
+        let word_idx = [ 20, 19]; //ut
+        assert_eq!( nodes[3].children[word_idx[0]],Some(6)); 
+        assert_eq!( nodes[6].children[word_idx[1]],Some(7));
+
+
+        //abs
+        assert_eq!( nodes[2].children[18],Some(8));
     }
 }
