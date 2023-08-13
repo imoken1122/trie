@@ -2,7 +2,7 @@
 
 const VOCAB_SIZE : usize = 128; // ascii code
 
-#[derive(Debug)]
+#[derive(Debug,PartialEq)]
 pub struct TrieNode {
     item : Option<String>,
     children  : Vec<Option<usize>>
@@ -19,7 +19,7 @@ impl TrieNode {
 
 }
 
-#[derive(Debug)]
+#[derive(Debug,PartialEq)]
 pub struct Trie{
     nodes : Vec<TrieNode>
 }
@@ -31,10 +31,6 @@ impl Trie{
         Trie{
             nodes 
         }
-    }
-    fn norm_ascii(self, w : char) -> usize{
-        w as usize - 'a' as usize
-
     }
     fn add_node(&mut self, node : TrieNode) -> Option<usize>{
         self.nodes.push(node);
@@ -68,6 +64,24 @@ impl Trie{
         Ok(())
 
     }
+
+
+    pub fn contain(&self, word : String) -> bool {
+        let mut node_idx = 0; 
+        for (i,c)  in word.chars().enumerate(){
+            // 'a'を基準に文字をindexに変換
+            let w_idx = c as usize - 'a' as usize;
+            let mut next_node_idx = self.nodes[node_idx].children[w_idx];
+            if node_idx!=0 && self.nodes[node_idx].item.as_ref().unwrap() == &word { return true }
+            // 登録されていれば false
+            if next_node_idx == None { return false }
+            // 次のノードに遷移 
+            node_idx = next_node_idx.unwrap();
+        }
+        
+        if node_idx!=0 && self.nodes[node_idx].item.as_ref().unwrap() == &word { return true }
+        false
+    }
 }
 
 mod test{
@@ -95,5 +109,21 @@ mod test{
 
         //abs
         assert_eq!( nodes[2].children[18],Some(8));
+    }
+
+    #[test]
+    fn test_contain(){
+        let mut trie = Trie::new();
+        trie.insert("above".to_string());
+        trie.insert("about".to_string());
+        trie.insert("abs".to_string());
+        trie.insert("char".to_string());
+        assert_eq!( trie.contain("above".to_string()),true);
+        assert_eq!( trie.contain("ab".to_string()),true);
+        assert_eq!( trie.contain("aov".to_string()),false);
+        assert_eq!( trie.contain("char".to_string()),true);
+        assert_eq!( trie.contain("like".to_string()),false);
+    
+
     }
 }
