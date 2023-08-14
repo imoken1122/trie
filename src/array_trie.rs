@@ -10,19 +10,22 @@
 //     acd |-1,-1,...,-1
 //
 
-const VOCAB_SIZE : usize = 128; // ascii code
 
+use crate::VOCAB_SIZE;
 #[derive(Debug,PartialEq)]
 pub struct TrieNode {
-    item : Option<String>,
-    children  : Vec<Option<usize>>
+    pub item : Option<String>,
+    pub children  : Vec<Option<usize>>,
+    pub num_child : usize
 }
 
 impl TrieNode {
     pub fn new(item:Option<String>) -> TrieNode{
         TrieNode {
             item :item ,
-            children : vec![None;VOCAB_SIZE]
+            children : vec![None;VOCAB_SIZE],
+            num_child : 0
+
         }
 
     }
@@ -32,7 +35,7 @@ impl TrieNode {
 
 #[derive(Debug,PartialEq)]
 pub struct Trie{
-    nodes : Vec<TrieNode>
+    pub nodes : Vec<TrieNode>
 }
 
 impl Trie{
@@ -64,6 +67,8 @@ impl Trie{
                 next_node_idx = self.add_node(next_node) ;
                 // 現在の node の w_idxに対応する子ノードidxを登録
                 self.nodes[node_idx].children[w_idx] = next_node_idx;
+                // 子ノードの数を追加
+                self.nodes[node_idx].num_child += 1;
             }
             // 次のノードに遷移 
             node_idx = next_node_idx.unwrap();
@@ -103,7 +108,7 @@ mod test{
         trie.insert("above".to_string());
         trie.insert("about".to_string());
         trie.insert("abs".to_string());
-        //println!("{:?}",trie.nodes);
+        println!("{:?}",trie.nodes);
         let nodes=trie.nodes;
 
 
