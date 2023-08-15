@@ -12,10 +12,12 @@
 
 
 use crate::VOCAB_SIZE;
+use crate::idx_t;
+
 #[derive(Debug,PartialEq)]
 pub struct TrieNode {
     pub item : Option<String>,
-    pub children  : Vec<Option<usize>>,
+    pub children  : Vec<Option<idx_t>>,
     pub num_child : usize
 }
 
@@ -51,7 +53,7 @@ impl Trie{
         Some(self.nodes.len() - 1)
 
     }
-    pub fn insert(&mut self,word : String) -> Result<(),()>{
+    pub fn insert(&mut self,word : String) {
 
         let mut node_idx = 0;
         for (i,c)  in word.chars().enumerate(){
@@ -77,7 +79,6 @@ impl Trie{
         }
 
 
-        Ok(())
 
     }
 
@@ -87,7 +88,7 @@ impl Trie{
         for (i,c)  in word.chars().enumerate(){
             // 'a'を基準に文字をindexに変換
             let w_idx = c as usize - 'a' as usize;
-            let mut next_node_idx = self.nodes[node_idx].children[w_idx];
+            let next_node_idx = self.nodes[node_idx].children[w_idx];
             if node_idx!=0 && self.nodes[node_idx].item.as_ref().unwrap() == &word { return true }
             // 登録されていれば false
             if next_node_idx == None { return false }
@@ -108,7 +109,7 @@ mod test{
         trie.insert("above".to_string());
         trie.insert("about".to_string());
         trie.insert("abs".to_string());
-        println!("{:?}",trie.nodes);
+       // println!("{:?}",trie.nodes);
         let nodes=trie.nodes;
 
 
